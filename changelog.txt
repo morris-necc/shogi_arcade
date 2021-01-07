@@ -1,0 +1,31 @@
+Ver 0.6
+- Added the main board
+- Added every piece
+- Their movements are now highlighted
+- You can now select the sprites
+- You can now place the piece back to its place
+- Fixed a lot of bugs
+
+Ver 0.7
+- Implemented the ability to actually take pieces
+- Added the 2 small boards to place taken pieces
+- Added the ability to place the piece back on board
+- Taken pieces are numbered so you know how much you have
+- Fixed a lot of bugs
+
+Ver 0.8
+- Added promotion
+- Added automatic promotion for pawn, knight, and lance
+- Fixed A LOT of bugs
+
+Ver 0.9
+- Implemented checking mechanics
+- Implemented pinning pieces
+- Implemented the double check
+- Fixed a lot of bugs
+
+Ver 1.0
+- You are finally able to checkmate and win the game
+- Added sound
+- Game now berates loser for being terrible
+- Fixed a lot of bugs
