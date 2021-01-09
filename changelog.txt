@@ -29,3 +29,8 @@ Ver 1.0
 - Added sound
 - Game now berates loser for being terrible
 - Fixed a lot of bugs
+
+Ver 1.1
+- Changed the name from just "Shogi" to "Shogi Sim"
+- Cleaned up a little
+- Fixed a few more bugs

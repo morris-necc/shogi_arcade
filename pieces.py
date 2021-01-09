@@ -7,24 +7,36 @@ class Pieces:
     def __init__(self, team: str, pos: list):
         self.team = team
         self.pos = pos #[screen_x, screen_y]
+
+        #coords for the 3 different boards
         self.coords = [int((pos[0] - 132.5)//75), int(8-((pos[1]-62.5)//75))] #[board_x, board_y]
         self.coords1 = [int((pos[0] - 937.5)//75), int(2-((pos[1]-87.5)//75))] #[white_board_x, white_board_y]
         self.coords2 = [int((pos[0] - 937.5)//75), int(2-((pos[1]-487.7)//75))] #[black_board_x, black_board_y]
+
+        #sprite
         self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "Shogi_empty1.png"), center_x=self.pos[0], center_y=self.pos[1])
+
+        #booleans
         self.captured = False
         self.just_placed = False
         self.promoted = False
         self.checking = False
+
+        #list of pieces that are pinning it
         self.pinned_by = []
 
     def highlight_moves(self):
+        #recalculate coords
         self.coords = [int((self.pos[0] - 132.5)//75), int(8-((self.pos[1]-62.5)//75))]
         self.coords1 = [int((self.pos[0] - 937.5)//75), int(2-((self.pos[1]-87.5)//75))]
         self.coords2 = [int((self.pos[0] - 937.5)//75), int(2-((self.pos[1]-487.7)//75))]
+
+        #initialize possible_squares variable
         possible_squares = [[],[],[]] #[[board_x, board_y]] [big board, white captured, black captured]
         return possible_squares
 
     def add_current_square(self, possible_squares, shapelist):
+        """ adds current square to list of possible squares """
         current_square = arcade.create_rectangle_filled(self.pos[0], self.pos[1], 73, 73, (166, 139, 90))
         shapelist.append(current_square)
         if not self.captured:
@@ -36,12 +48,18 @@ class Pieces:
                 possible_squares[2].append(self.coords2)        
 
     def add_squares(self, x, y, possible_squares, shapelist):
-        # x and y are board coordinates
+        """ adds specified square to list of possible squares """
         possible_squares[0].append([x, y])
         square = arcade.create_rectangle_filled(board_map[y][x][0], board_map[y][x][1], 73, 73, (255, 236, 201))
         shapelist.append(square)
 
     def taken(self, x, y1, y2):
+        """ 
+        runs necessary code to simulate being taken 
+        x = x coordinate of the small boards
+        y1 = y coordinate of black's small board
+        y2 = y coordinate of white's small board
+        """
         self.captured = True
         if self.team == "white":
             self.team = "black"
@@ -55,17 +73,17 @@ class Pieces:
             self.pos = [x, y2]
 
     def check_if_checking(self, board, king_in_range, king_location):
+        """ checks if current piece is checking opposing king, returns True/False """
         if king_in_range:
             board[king_location[0]][king_location[1]].checked = True
             self.checking = True
-            print("Check!")
             return True
         else:
             self.checking = False
             return False
 
     def evaluate_movement(self, x, y, board, covered_squares, enemy_piece, possible_squares, shapelist):
-        """checks if moving to [x, y] does not expose the king and adds it to possible moves"""
+        """ simulates if moving to [x, y] does not expose the king and adds it to possible moves"""
         temp_board, temp_covered_squares = copy.deepcopy(board), copy.deepcopy(covered_squares)
         if not self.captured:
             temp_board[self.coords[1]][self.coords[0]], temp_board[y][x] = 0, temp_board[self.coords[1]][self.coords[0]]
@@ -84,9 +102,10 @@ class Pawn(Pieces):
     def highlight_moves(self, shapelist, board, covered_squares, king_checked, checking_pieces):
         possible_squares = super().highlight_moves()
 
-        #since different team pawns moves in opposite direction, check for which team your pawn is in
+        # if there are 2 checking pieces, you can't move this piece
         if len(checking_pieces) <= 1:
             if not self.captured:
+                # white team pawn movement
                 if self.team == "white":
                     #checks whether there is a piece in front
                     if board[self.coords[1] - 1][self.coords[0]] != 0:
@@ -109,6 +128,8 @@ class Pawn(Pieces):
                                 super().evaluate_movement(self.coords[0], self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
                         elif king_checked and checking_pieces[0].piece_type in "BRL":
                             super().evaluate_movement(self.coords[0], self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
+
+                # black team pawn movement
                 else:
                     if board[self.coords[1] + 1][self.coords[0]] != 0:
                         if king_checked:
@@ -129,8 +150,11 @@ class Pawn(Pieces):
                                 super().evaluate_movement(self.coords[0], self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
                         elif king_checked and checking_pieces[0].piece_type in "BRL":
                             super().evaluate_movement(self.coords[0], self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
+
+            # if captured
             else:
                 if self.team == "white":
+                    # if another pawn from the same team is on the same column, whole column is illegal
                     for x in range(0,9):
                         column_is_possible = True
                         for y in range(1,9):
@@ -168,26 +192,22 @@ class Pawn(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         # reset both protecting of yourself and protected_by of others if you have to
         # and also your own protected_by
         super().taken(975, 525, 275)
         if self.team == "white":
             if white_board[0][0] != 0:
-                white_board[0][0].append(itself)
+                white_board[0][0].append(self)
             else:
-                white_board[0][0] = [itself]
+                white_board[0][0] = [self]
         else:
             if black_board[2][0] != 0:
-                black_board[2][0].append(itself)
+                black_board[2][0].append(self)
             else:
-                black_board[2][0] = [itself]
+                black_board[2][0] = [self]
 
     def calculate_protecting(self, board, covered_squares):
-        # update both self.protecting list
-        # and the other pieces' protected_by list
-        # and then you loop this function for every single piece on your team before it switches turns
-        # reset BOTH protected and protected_by at the start of your turn
         king_in_range = False
         king_location = [0, 0]
         if not self.captured:
@@ -348,18 +368,18 @@ class Bishop(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(975, 675, 125)
         if self.team == "white":
             if white_board[2][0] != 0:
-                white_board[2][0].append(itself)
+                white_board[2][0].append(self)
             else:
-                white_board[2][0] = [itself]
+                white_board[2][0] = [self]
         else:
             if black_board[0][0] != 0:
-                black_board[0][0].append(itself)
+                black_board[0][0].append(self)
             else:
-                black_board[0][0] = [itself]
+                black_board[0][0] = [self]
 
     def calculate_protecting(self, board, covered_squares):
         king_in_range = False
@@ -388,6 +408,7 @@ class Bishop(Pieces):
                         covered_squares.append([x, y])
 
             #up-left diagonal
+            pieces_encountered = 0
             for x, y in zip(range(self.coords[0] - 1, -1, -1), range(self.coords[1] - 1, -1, -1)):
                 if board[y][x] != 0:
                     if board[y][x].team == self.team:
@@ -409,6 +430,7 @@ class Bishop(Pieces):
                         covered_squares.append([x, y])
 
             #down-right diagonal
+            pieces_encountered = 0
             for x, y in zip(range(self.coords[0] + 1, 9), range(self.coords[1] + 1, 9)):
                 if board[y][x] != 0:
                     if board[y][x].team == self.team:
@@ -430,6 +452,7 @@ class Bishop(Pieces):
                         covered_squares.append([x, y])
 
             #down-left diagonal
+            pieces_encountered = 0
             for x, y in zip(range(self.coords[0] - 1, -1, -1), range(self.coords[1] + 1, 9,)):
                 if board[y][x] != 0:
                     if board[y][x].team == self.team:
@@ -585,18 +608,18 @@ class Rook(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1125, 675, 125)
         if self.team == "white":
             if white_board[2][2] != 0:
-                white_board[2][2].append(itself)
+                white_board[2][2].append(self)
             else:
-                white_board[2][2] = [itself]
+                white_board[2][2] = [self]
         else:
             if black_board[0][2] != 0:
-                black_board[0][2].append(itself)
+                black_board[0][2].append(self)
             else:
-                black_board[0][2] = [itself]
+                black_board[0][2] = [self]
 
     def calculate_protecting(self, board, covered_squares):
         pieces_encountered = 0
@@ -781,18 +804,18 @@ class Lance(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
     
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1050, 525, 275)
         if self.team == "white":
             if white_board[0][1] != 0:
-                white_board[0][1].append(itself)
+                white_board[0][1].append(self)
             else:
-                white_board[0][1] = [itself]
+                white_board[0][1] = [self]
         else:
             if black_board[2][1] != 0:
-                black_board[2][1].append(itself)
+                black_board[2][1].append(self)
             else:
-                black_board[2][1] = [itself]
+                black_board[2][1] = [self]
 
     def calculate_protecting(self, board, covered_squares):
         pieces_encountered = 0
@@ -966,18 +989,18 @@ class Knight(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1125, 525, 275)
         if self.team == "white":
             if white_board[0][2] != 0:
-                white_board[0][2].append(itself)
+                white_board[0][2].append(self)
             else:
-                white_board[0][2] = [itself]
+                white_board[0][2] = [self]
         else:
             if black_board[2][2] != 0:
-                black_board[2][2].append(itself)
+                black_board[2][2].append(self)
             else:
-                black_board[2][2] = [itself]
+                black_board[2][2] = [self]
 
     def calculate_protecting(self, board, covered_squares):
         king_in_range = False
@@ -1157,18 +1180,18 @@ class Silver(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(975, 600, 200)
         if self.team == "white":
             if white_board[1][0] != 0:
-                white_board[1][0].append(itself)
+                white_board[1][0].append(self)
             else:
-                white_board[1][0] = [itself]
+                white_board[1][0] = [self]
         else:
             if black_board[1][0] != 0:
-                black_board[1][0].append(itself)
+                black_board[1][0].append(self)
             else:
-                black_board[1][0] = [itself]
+                black_board[1][0] = [self]
     
     def calculate_protecting(self, board, covered_squares):
         king_in_range = False
@@ -1410,18 +1433,18 @@ class Gold(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1125, 600, 200)
         if self.team == "white":
             if white_board[1][2] != 0:
-                white_board[1][2].append(itself)
+                white_board[1][2].append(self)
             else:
-                white_board[1][2] = [itself]
+                white_board[1][2] = [self]
         else:
             if black_board[1][2] != 0:
-                black_board[1][2].append(itself)
+                black_board[1][2].append(self)
             else:
-                black_board[1][2] = [itself]
+                black_board[1][2] = [self]
 
     def calculate_protecting(self, board, covered_squares):
         king_in_range = False
@@ -1600,7 +1623,7 @@ class King(Pieces):
                 except:
                     pass
 
-class Promoted_Piece(Pieces):
+class PromotedPiece(Pieces):
     def __init__(self,team: str,pos: list, piece_type: str):
         super().__init__(team, pos)
         self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", piece_type+".png"), center_x=self.pos[0], center_y=self.pos[1])
@@ -1767,18 +1790,18 @@ class Promoted_Piece(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1125, 600, 200)
         if self.team == "white":
             if white_board[1][2] != 0:
-                white_board[1][2].append(itself)
+                white_board[1][2].append(self)
             else:
-                white_board[1][2] = [itself]
+                white_board[1][2] = [self]
         else:
             if black_board[1][2] != 0:
-                black_board[1][2].append(itself)
+                black_board[1][2].append(self)
             else:
-                black_board[1][2] = [itself]
+                black_board[1][2] = [self]
 
     def demote(self):
         if self.piece_type == "P":
@@ -1879,7 +1902,7 @@ class Promoted_Piece(Pieces):
             
             return super().check_if_checking(board, king_in_range, king_location)
 
-class Promoted_Rook(Pieces):
+class PromotedRook(Pieces):
     def __init__(self,team: str,pos: list):
         super().__init__(team, pos)
         self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "R.png"), center_x=self.pos[0], center_y=self.pos[1])
@@ -2029,18 +2052,18 @@ class Promoted_Rook(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(1125, 675, 125)
         if self.team == "white":
             if white_board[2][2] != 0:
-                white_board[2][2].append(itself)
+                white_board[2][2].append(self)
             else:
-                white_board[2][2] = [itself]
+                white_board[2][2] = [self]
         else:
             if black_board[0][2] != 0:
-                black_board[0][2].append(itself)
+                black_board[0][2].append(self)
             else:
-                black_board[0][2] = [itself]
+                black_board[0][2] = [self]
 
     def demote(self):
         return Rook(self.team, self.pos)
@@ -2153,7 +2176,7 @@ class Promoted_Rook(Pieces):
 
             return super().check_if_checking(board, king_in_range, king_location)
 
-class Promoted_Bishop(Pieces):
+class PromotedBishop(Pieces):
     def __init__(self,team: str,pos: list):
         super().__init__(team, pos)
         self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "B.png"), center_x=self.pos[0], center_y=self.pos[1])
@@ -2323,18 +2346,18 @@ class Promoted_Bishop(Pieces):
         if len(possible_squares[0]) != 0:
             return possible_squares
 
-    def taken(self, white_board, black_board, itself):
+    def taken(self, white_board, black_board):
         super().taken(975, 675, 125)
         if self.team == "white":
             if white_board[2][0] != 0:
-                white_board[2][0].append(itself)
+                white_board[2][0].append(self)
             else:
-                white_board[2][0] = [itself]
+                white_board[2][0] = [self]
         else:
             if black_board[0][0] != 0:
-                black_board[0][0].append(itself)
+                black_board[0][0].append(self)
             else:
-                black_board[0][0] = [itself]
+                black_board[0][0] = [self]
 
     def demote(self):
         return Bishop(self.team, self.pos)
@@ -2389,6 +2412,7 @@ class Promoted_Bishop(Pieces):
                         covered_squares.append([x, y])
 
             #down-right diagonal
+            pieces_encountered = 0
             for x, y in zip(range(self.coords[0] + 1, 9), range(self.coords[1] + 1, 9)):
                 if board[y][x] != 0:
                     if board[y][x].team == self.team:
@@ -2410,6 +2434,7 @@ class Promoted_Bishop(Pieces):
                         covered_squares.append([x, y])
 
             #down-left diagonal
+            pieces_encountered = 0
             for x, y in zip(range(self.coords[0] - 1, -1, -1), range(self.coords[1] + 1, 9,)):
                 if board[y][x] != 0:
                     if board[y][x].team == self.team:
