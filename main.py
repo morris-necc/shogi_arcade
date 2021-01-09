@@ -195,12 +195,8 @@ class MyGameWindow(arcade.Window):
 
         else: #if there is a prompt
             if 385 <= x <= 455 and 345 <= y <= 375: #yes is picked
-                if self.selected_piece.piece_type in "PNLS": #if promotes to gold general
-                    self.promote(1)
-                elif self.selected_piece.piece_type == "R":
-                    self.promote(2)
-                elif self.selected_piece.piece_type == "B":
-                    self.promote(3)
+                #promote
+                self.promote()
 
                 self.highlight = arcade.ShapeElementList()
                 self.promotion_prompt = False
@@ -330,14 +326,14 @@ class MyGameWindow(arcade.Window):
         # resets previous position of last clicks
         self.prev_position = [[],[],[]]
 
-    def promote(self, promotion_type):
+    def promote(self):
         """removes current piece and place promoted version"""
         self.all_pieces.remove(self.selected_piece.sprite)
-        if promotion_type == 1:
+        if self.selected_piece.piece_type in "PNLS":
             self.selected_piece = pieces.PromotedPiece(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]], self.selected_piece.piece_type)
-        elif promotion_type == 2:
+        elif self.selected_piece.piece_type == "R":
             self.selected_piece = pieces.PromotedRook(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]])
-        else:
+        elif self.selected_piece.piece_type == "B":
             self.selected_piece = pieces.PromotedBishop(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]])
         
         #puts piece on the board

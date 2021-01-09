@@ -193,8 +193,6 @@ class Pawn(Pieces):
             return possible_squares
 
     def taken(self, white_board, black_board):
-        # reset both protecting of yourself and protected_by of others if you have to
-        # and also your own protected_by
         super().taken(975, 525, 275)
         if self.team == "white":
             if white_board[0][0] != 0:
