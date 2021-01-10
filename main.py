@@ -348,7 +348,7 @@ class MyGameWindow(arcade.Window):
             if (square_location[1] <= 1 and self.turn == "white") or (square_location[1] >= 7 and self.turn == "black"):
                 self.pieces_selected = False
                 self.prev_position[0] = square_location
-                self.promote(1)
+                self.promote()
                 self.highlight = arcade.ShapeElementList()
                 self.switch_turns()
                 return True
@@ -356,7 +356,7 @@ class MyGameWindow(arcade.Window):
             if (square_location[1] <= 0 and self.turn == "white") or (square_location[1] >= 8 and self.turn == "black"):
                 self.pieces_selected = False
                 self.prev_position[0] = square_location
-                self.promote(1)
+                self.promote()
                 self.highlight = arcade.ShapeElementList()
                 self.switch_turns()
                 return True
