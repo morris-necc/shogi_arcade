@@ -34,3 +34,7 @@ Ver 1.1
 - Changed the name from just "Shogi" to "Shogi Sim"
 - Cleaned up a little
 - Fixed a few more bugs
+
+Ver 1.2
+- Added move history and saving
+- Fixed a few more bugs

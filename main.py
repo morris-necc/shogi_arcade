@@ -2,11 +2,12 @@ import os
 import sys
 import arcade
 import pieces
+from datetime import datetime
 
 class MyGameWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
-        self.set_location(200,100)
+        self.set_location(0,25)
 
         # variables for coordinate calculation relative to the board and relative to the screen
         self.board_pieces_location = [[0 for i in range(9)] for j in range (9)]
@@ -20,6 +21,7 @@ class MyGameWindow(arcade.Window):
         self.mouse_x = 0
         self.mouse_y = 0
         self.selected_piece = 0 #stores selected piece object
+        self.turn_number = 1
 
         # booleans and somewhat boolean
         self.pieces_selected = False
@@ -27,13 +29,17 @@ class MyGameWindow(arcade.Window):
         self.promotion_prompt = False
         self.king_checked = False
         self.king_checkmated = False
+        self.capture_done = False
+        self.checked_for_promotion = False
 
         # lists
-        self.prev_position = [[0, 0], [0, 0], [0, 0]] #not the prev pos of last turn, but prev pos of last click (which could be from either this or last turn)
+        self.prev_position = [[0, 0], [0, 0], [0, 0], [0, 0]] #not the prev pos of last turn, but prev pos of last click (which could be from either this or last turn)
+        self.new_position = []
         self.possible_moves = []
         self.checking_pieces = []
         self.covered_squares = ["test"]
         self.check_possible_responses = [None]
+        self.move_history = [["1"]]
 
         # sound files
         self.place_sound = arcade.Sound(os.path.join(sys.path[0], "sound", "clack.wav"))
@@ -46,6 +52,11 @@ class MyGameWindow(arcade.Window):
 
         # places pieces on their correct locations
         self.initialize_pieces()
+        
+        # save file
+        name = datetime.now().strftime("%m.%d.%Y,%H;%M;%S")+".txt"
+        saves = os.path.join(sys.path[0], "saves")
+        self.save_file = open(os.path.join(saves, name), "w", encoding='utf-8')
         
     def on_draw(self):
         # starts render
@@ -66,6 +77,9 @@ class MyGameWindow(arcade.Window):
         # draws game over
         if self.king_checkmated:
             self.draw_checkmate()
+
+        # draws moves
+        self.draw_move_history()
 
         #draws selected piece
         try:
@@ -122,6 +136,7 @@ class MyGameWindow(arcade.Window):
                             self.board_pieces_location[square_location[1]][square_location[0]] = 0
 
                             #placing the piece
+                            self.capture_done = True
                             self.place_and_check_promotion(square_location)
 
                     #if you don't have a piece selected
@@ -194,6 +209,7 @@ class MyGameWindow(arcade.Window):
                             self.highlight = arcade.ShapeElementList()
 
         else: #if there is a prompt
+            self.checked_for_promotion = True
             if 385 <= x <= 455 and 345 <= y <= 375: #yes is picked
                 #promote
                 self.promote()
@@ -234,6 +250,16 @@ class MyGameWindow(arcade.Window):
         #turn indicator
         arcade.draw_text(self.turn.upper()+"'s turn", 1050, 400, arcade.color.WHITE, 30, align="center", anchor_x="center", anchor_y="center")
 
+        #rank and file numbers
+        for x in range(170, 845, 75):
+            arcade.draw_text(str(x//75 - 1), x, 25, arcade.color.WHITE, 20, align="center", anchor_x="center", anchor_y="center")
+        for y in range(100, 775, 75):
+            arcade.draw_text(str(y//75), 95, y, arcade.color.WHITE, 20, align="center", anchor_x="center", anchor_y="center")
+
+        #move history
+        arcade.draw_rectangle_filled(1360, 400, 300, 600, (30, 25, 19))
+        arcade.draw_text("Move History", 1360, 675, arcade.color.WHITE, 20, align="center", anchor_x="center", anchor_y="center")
+
     def draw_prompt(self):
         """ Draws the promotion prompt """
         # dark rectangle with "promote?" question
@@ -248,6 +274,11 @@ class MyGameWindow(arcade.Window):
         # draws yes and no button
         draw_button(420, 360, "Yes")
         draw_button(520, 360, "No")
+
+    def draw_move_history(self):
+        for i, y in zip(range(0, len(self.move_history)), range(625, 100, -25)):
+            for j, x in zip(range(0, len(self.move_history[i])), range(1220, 1520, 120)):
+                arcade.draw_text(self.move_history[i][j], x, y, arcade.color.WHITE, 20, align="center", anchor_x="center", anchor_y="center")
 
     def captured_pieces_count(self):
         """counts and displays how much of every type of captured piece you have, if any"""
@@ -317,20 +348,27 @@ class MyGameWindow(arcade.Window):
         else:
             self.king_checked = False
 
-        #switches turns
+        #adds to move history
+        self.add_history()
+
+        #switches turns        
         if self.turn == "white":
             self.turn = "black"
         else:
             self.turn = "white"
 
         # resets previous position of last clicks
-        self.prev_position = [[],[],[]]
+        self.prev_position = [[],[],[],[]]
+
+        # resets variables used for notation
+        self.checked_for_promotion = False
+        self.capture_done = False
 
     def promote(self):
         """removes current piece and place promoted version"""
         self.all_pieces.remove(self.selected_piece.sprite)
         if self.selected_piece.piece_type in "PNLS":
-            self.selected_piece = pieces.PromotedPiece(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]], self.selected_piece.piece_type)
+            self.selected_piece = pieces.PromotedPiece(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]], "+"+self.selected_piece.piece_type)
         elif self.selected_piece.piece_type == "R":
             self.selected_piece = pieces.PromotedRook(self.turn, self.coordinates_map[self.prev_position[0][1]][self.prev_position[0][0]])
         elif self.selected_piece.piece_type == "B":
@@ -348,6 +386,7 @@ class MyGameWindow(arcade.Window):
             if (square_location[1] <= 1 and self.turn == "white") or (square_location[1] >= 7 and self.turn == "black"):
                 self.pieces_selected = False
                 self.prev_position[0] = square_location
+                self.checked_for_promotion = True
                 self.promote()
                 self.highlight = arcade.ShapeElementList()
                 self.switch_turns()
@@ -356,6 +395,7 @@ class MyGameWindow(arcade.Window):
             if (square_location[1] <= 0 and self.turn == "white") or (square_location[1] >= 8 and self.turn == "black"):
                 self.pieces_selected = False
                 self.prev_position[0] = square_location
+                self.checked_for_promotion = True
                 self.promote()
                 self.highlight = arcade.ShapeElementList()
                 self.switch_turns()
@@ -367,6 +407,7 @@ class MyGameWindow(arcade.Window):
         self.selected_piece.sprite.set_position(self.coordinates_map[square_location[1]][square_location[0]][0], self.coordinates_map[square_location[1]][square_location[0]][1])
         self.selected_piece.pos = self.coordinates_map[square_location[1]][square_location[0]]
         self.selected_piece.coords = square_location
+        self.new_position = square_location
 
         #resets some variables
         self.pieces_selected = False
@@ -382,8 +423,9 @@ class MyGameWindow(arcade.Window):
     def place_and_check_promotion(self, square_location):
         """ checks for promotion and places piece down """
         #so captured pieces don't promote when you've just placed them down
+        same_place = False
         if square_location == self.prev_position[0]:
-            self.selected_piece.just_placed = True
+            same_place = True
 
         if self.turn == "white":
             # checks if piece at promotion range
@@ -395,10 +437,12 @@ class MyGameWindow(arcade.Window):
                 auto_promote = self.check_auto_promote(square_location)
                 if not auto_promote:
                     if self.selected_piece.piece_type in "BRSLNKP":
-                        if not self.selected_piece.just_placed:
+                        if not self.selected_piece.just_placed and not same_place:
                             # displays the prompt
                             self.pieces_selected = False
+                            self.prev_position[3] = self.prev_position[0]
                             self.prev_position[0] = square_location
+                            self.new_position = square_location
                             self.promotion_prompt = True
                         else:
                             self.place(square_location)
@@ -413,9 +457,11 @@ class MyGameWindow(arcade.Window):
                 auto_promote = self.check_auto_promote(square_location)
                 if not auto_promote:
                     if self.selected_piece.piece_type in "BRSLNKP":
-                        if not self.selected_piece.just_placed:
+                        if not self.selected_piece.just_placed and not same_place:
                             self.pieces_selected = False
+                            self.prev_position[3] = self.prev_position[0]
                             self.prev_position[0] = square_location
+                            self.new_position = square_location
                             self.promotion_prompt = True
                         else:
                             self.place(square_location)
@@ -460,6 +506,46 @@ class MyGameWindow(arcade.Window):
         arcade.draw_rectangle_filled(470, 400, 200, 150, (30, 25, 19))
         arcade.draw_text(self.turn.upper()+" wins!", 470, 420, arcade.color.WHITE, 20, align="center", anchor_x="center", anchor_y="center")
 
+    def convert_for_recording(self):
+        prev_position = ""
+        try:
+            if self.checked_for_promotion:
+                prev_position = str(self.prev_position[3][0] + 1) + str(9-self.prev_position[3][1])
+            else:
+                prev_position = str(self.prev_position[0][0] + 1) + str(9-self.prev_position[0][1])
+        except:
+            pass
+        new_position = str(self.new_position[0] + 1) + str(9 - self.new_position[1])
+        return new_position, prev_position
 
-MyGameWindow(1280, 800, "Shogi Sim v1.1")
+    def add_history(self):
+        new_position, prev_position = self.convert_for_recording()
+        if self.selected_piece.just_placed: #piece is dropped
+            self.move_history[-1].append(self.selected_piece.piece_type+"*"+new_position)
+        elif self.capture_done:
+            if self.checked_for_promotion:
+                if self.selected_piece.promoted:
+                    self.move_history[-1].append(self.selected_piece.piece_type[1]+prev_position+"x"+new_position+"+")
+                else:
+                    self.move_history[-1].append(self.selected_piece.piece_type+prev_position+"x"+new_position+"=")
+            else:
+                self.move_history[-1].append(self.selected_piece.piece_type+prev_position+"x"+new_position)
+        else:
+            if self.checked_for_promotion:
+                if self.selected_piece.promoted:
+                    self.move_history[-1].append(self.selected_piece.piece_type[1]+prev_position+"-"+new_position+"+")
+                else:
+                    self.move_history[-1].append(self.selected_piece.piece_type+prev_position+"-"+new_position+"=")
+            else:
+                self.move_history[-1].append(self.selected_piece.piece_type+prev_position+"-"+new_position)
+        if self.turn == "black":
+            self.turn_number += 1
+            self.move_history.append([str(self.turn_number)])
+            if len(self.move_history) >= 21:
+                self.move_history.pop(0)
+            self.save_file.writelines(self.move_history[-2][-1]+"\n")
+        else:
+            self.save_file.writelines(self.move_history[-1][0] + " "+ self.move_history[-1][1] + " ")
+            
+MyGameWindow(1580, 800, "Shogi Sim v1.2")
 arcade.run()

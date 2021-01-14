@@ -126,7 +126,7 @@ class Pawn(Pieces):
                                 super().add_squares(self.coords[0], self.coords[1] - 1, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 # black team pawn movement
@@ -148,7 +148,7 @@ class Pawn(Pieces):
                                 super().add_squares(self.coords[0], self.coords[1] + 1, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
             # if captured
@@ -167,7 +167,7 @@ class Pawn(Pieces):
                                 if board[y][x] == 0:
                                     if not king_checked:
                                         super().add_squares(x, y, possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                         
                 else:
@@ -183,7 +183,7 @@ class Pawn(Pieces):
                                 if board[y][x] == 0:
                                     if not king_checked:
                                         super().add_squares(x, y, possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello": #prevents adding current square as a possible square if checking for checkmate
@@ -267,7 +267,7 @@ class Bishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #up-left diagonal
@@ -294,7 +294,7 @@ class Bishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down-right diagonal
@@ -321,7 +321,7 @@ class Bishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down-left diagonal
@@ -348,7 +348,7 @@ class Bishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                         
             else:
@@ -357,7 +357,7 @@ class Bishop(Pieces):
                         if board[y][x] == 0:
                             if not king_checked:
                                 super().add_squares(x, y, possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -508,7 +508,7 @@ class Rook(Pieces):
                                 super().add_squares(self.coords[0], y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down
@@ -535,7 +535,7 @@ class Rook(Pieces):
                                 super().add_squares(self.coords[0], y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                 
                 #right
@@ -562,7 +562,7 @@ class Rook(Pieces):
                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #left
@@ -589,7 +589,7 @@ class Rook(Pieces):
                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
             else:
                 for x in range(0,9):
@@ -597,7 +597,7 @@ class Rook(Pieces):
                         if board[y][x] == 0:
                             if not king_checked:
                                 super().add_squares(x, y, possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -748,7 +748,7 @@ class Lance(Pieces):
                                     super().add_squares(self.coords[0], y, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                 else:
                     for y in range(self.coords[1] + 1, 9):
@@ -773,7 +773,7 @@ class Lance(Pieces):
                                     super().add_squares(self.coords[0], y, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
             else:
                 if self.team == "white":
@@ -782,7 +782,7 @@ class Lance(Pieces):
                             if board[y][x] == 0:
                                 if not king_checked:
                                     super().add_squares(x, y, possible_squares, shapelist)
-                                elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                     temp_board, temp_covered_squares = copy.deepcopy(board), copy.deepcopy(covered_squares)
                                     temp_board[y][x] = copy.deepcopy(self)
                                     if not checking_pieces[0].calculate_protecting(temp_board, temp_covered_squares):
@@ -793,7 +793,7 @@ class Lance(Pieces):
                             if board[y][x] == 0:
                                 if not king_checked:
                                     super().add_squares(x, y, possible_squares, shapelist)
-                                elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                     super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -894,7 +894,7 @@ class Knight(Pieces):
                                     super().add_squares(self.coords[0]-1, self.coords[1]-2, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0]-1, self.coords[1]-2, covered_squares, pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0]-1, self.coords[1]-2, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                     #right
                     if self.coords[0] + 1 != 9:
@@ -915,7 +915,7 @@ class Knight(Pieces):
                                     super().add_squares(self.coords[0]+1, self.coords[1]-2, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0]+1, self.coords[1]-2, covered_squares, pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0]+1, self.coords[1]-2, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                 else:
                     #left
@@ -937,7 +937,7 @@ class Knight(Pieces):
                                     super().add_squares(self.coords[0]-1, self.coords[1]+2, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0]-1, self.coords[1]+2, covered_squares, pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0]-1, self.coords[1]+2, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                     #right
                     if self.coords[0] + 1 != 9:
@@ -958,7 +958,7 @@ class Knight(Pieces):
                                     super().add_squares(self.coords[0]+1, self.coords[1]+2, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0]+1, self.coords[1]+2, covered_squares, pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0]+1, self.coords[1]+2, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
             else:
                 if self.team == "white":
@@ -967,7 +967,7 @@ class Knight(Pieces):
                             if board[y][x] == 0:
                                 if not king_checked:
                                     super().add_squares(x, y, possible_squares, shapelist)
-                                elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                     temp_board, temp_covered_squares = copy.deepcopy(board), copy.deepcopy(covered_squares)
                                     temp_board[y][x] = copy.deepcopy(self)
                                     if not checking_pieces[0].calculate_protecting(temp_board, temp_covered_squares):
@@ -978,7 +978,7 @@ class Knight(Pieces):
                             if board[y][x] == 0:
                                 if not king_checked:
                                     super().add_squares(x, y, possible_squares, shapelist)
-                                elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                     super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -1083,7 +1083,7 @@ class Silver(Pieces):
                                                 super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1108,7 +1108,7 @@ class Silver(Pieces):
                                                 super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1134,7 +1134,7 @@ class Silver(Pieces):
                                             super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1159,7 +1159,7 @@ class Silver(Pieces):
                                                 super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1169,7 +1169,7 @@ class Silver(Pieces):
                         if board[y][x] == 0:
                             if not king_checked:
                                 super().add_squares(x, y, possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -1291,7 +1291,7 @@ class Gold(Pieces):
                                                 super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1316,7 +1316,7 @@ class Gold(Pieces):
                                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1340,7 +1340,7 @@ class Gold(Pieces):
                                             super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 else:
@@ -1365,7 +1365,7 @@ class Gold(Pieces):
                                             super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1390,7 +1390,7 @@ class Gold(Pieces):
                                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1414,7 +1414,7 @@ class Gold(Pieces):
                                             super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
             else:
                 for x in range(0,9):
@@ -1422,7 +1422,7 @@ class Gold(Pieces):
                         if board[y][x] == 0:
                             if not king_checked:
                                 super().add_squares(x, y, possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
         
         if covered_squares[-1] != "hello":
@@ -1656,7 +1656,7 @@ class PromotedPiece(Pieces):
                                                 super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1681,7 +1681,7 @@ class PromotedPiece(Pieces):
                                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1705,7 +1705,7 @@ class PromotedPiece(Pieces):
                                             super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 else:
@@ -1730,7 +1730,7 @@ class PromotedPiece(Pieces):
                                             super().add_squares(x, self.coords[1] + 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] + 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1755,7 +1755,7 @@ class PromotedPiece(Pieces):
                                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                                             else:
                                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                             except:
                                 pass
@@ -1779,7 +1779,7 @@ class PromotedPiece(Pieces):
                                             super().add_squares(x, self.coords[1] - 1, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, self.coords[1] - 1, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                         
         if covered_squares[-1] != "hello":
@@ -1802,13 +1802,13 @@ class PromotedPiece(Pieces):
                 black_board[1][2] = [self]
 
     def demote(self):
-        if self.piece_type == "P":
+        if self.piece_type == "+P":
             return Pawn(self.team, self.pos)
-        elif self.piece_type == "N":
+        elif self.piece_type == "+N":
             return Knight(self.team, self.pos)
-        elif self.piece_type == "L":
+        elif self.piece_type == "+L":
             return Lance(self.team, self.pos)
-        elif self.piece_type == "S":
+        elif self.piece_type == "+S":
             return Silver(self.team, self.pos)
 
     def calculate_protecting(self, board, covered_squares):
@@ -1903,8 +1903,8 @@ class PromotedPiece(Pieces):
 class PromotedRook(Pieces):
     def __init__(self,team: str,pos: list):
         super().__init__(team, pos)
-        self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "R.png"), center_x=self.pos[0], center_y=self.pos[1])
-        self.piece_type = "R"
+        self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "+R.png"), center_x=self.pos[0], center_y=self.pos[1])
+        self.piece_type = "+R"
         self.promoted = True
 
     def highlight_moves(self, shapelist, board, covered_squares, king_checked, checking_pieces):
@@ -1935,7 +1935,7 @@ class PromotedRook(Pieces):
                                 super().add_squares(self.coords[0], y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down
@@ -1962,7 +1962,7 @@ class PromotedRook(Pieces):
                                 super().add_squares(self.coords[0], y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                 
                 #right
@@ -1989,7 +1989,7 @@ class PromotedRook(Pieces):
                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #left
@@ -2016,7 +2016,7 @@ class PromotedRook(Pieces):
                                 super().add_squares(x, self.coords[1], possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #diagonals
@@ -2041,7 +2041,7 @@ class PromotedRook(Pieces):
                                             super().add_squares(x, y, possible_squares, shapelist)
                                         else:
                                             super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                                    elif king_checked and checking_pieces[0].piece_type in "BRL":
+                                    elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                         super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
@@ -2177,8 +2177,8 @@ class PromotedRook(Pieces):
 class PromotedBishop(Pieces):
     def __init__(self,team: str,pos: list):
         super().__init__(team, pos)
-        self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "B.png"), center_x=self.pos[0], center_y=self.pos[1])
-        self.piece_type = "B"
+        self.sprite = arcade.Sprite(os.path.join(sys.path[0], "sprites", "+B.png"), center_x=self.pos[0], center_y=self.pos[1])
+        self.piece_type = "+B"
         self.promoted = True
 
     def highlight_moves(self, shapelist, board, covered_squares, king_checked, checking_pieces):
@@ -2210,7 +2210,7 @@ class PromotedBishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #up-left diagonal
@@ -2237,7 +2237,7 @@ class PromotedBishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down-right diagonal
@@ -2264,7 +2264,7 @@ class PromotedBishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #down-left diagonal
@@ -2291,7 +2291,7 @@ class PromotedBishop(Pieces):
                                 super().add_squares(x, y, possible_squares, shapelist)
                             else:
                                 super().evaluate_movement(x, y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                        elif king_checked and checking_pieces[0].piece_type in "BRL":
+                        elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                             super().evaluate_movement(x, y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
                 #cross
@@ -2314,7 +2314,7 @@ class PromotedBishop(Pieces):
                                     super().add_squares(x, self.coords[1], possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(x, self.coords[1], board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(x, self.coords[1], board, covered_squares, checking_pieces[0], possible_squares, shapelist)
                 for y in range(self.coords[1]-1, self.coords[1]+2, 2):
                     if y != -1 and y != 9:
@@ -2335,7 +2335,7 @@ class PromotedBishop(Pieces):
                                     super().add_squares(self.coords[0], y, possible_squares, shapelist)
                                 else:
                                     super().evaluate_movement(self.coords[0], y, board, covered_squares, self.pinned_by[0], possible_squares, shapelist)
-                            elif king_checked and checking_pieces[0].piece_type in "BRL":
+                            elif king_checked and checking_pieces[0].piece_type in ["B", "R", "L", "+B", "+R"]:
                                 super().evaluate_movement(self.coords[0], y, board, covered_squares, checking_pieces[0], possible_squares, shapelist)
 
         if covered_squares[-1] != "hello":
